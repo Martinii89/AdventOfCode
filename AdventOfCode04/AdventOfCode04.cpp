@@ -122,14 +122,12 @@ Passport GetPassportFromStream(std::ifstream& s)
 	while (std::getline(s, line) && !line.empty())
 	{
 		std::istringstream is_line(line);
-		std::string keyValPair;
-		while (is_line >> keyValPair)
+		std::string key_val;
+		while (is_line >> key_val)
 		{
-			std::istringstream keyValStream(keyValPair);
-			auto delim = keyValPair.find(':');
-			auto key = keyValPair.substr(0, delim);
-			auto val = keyValPair.substr(delim + 1, keyValPair.size());
-			//std::cout << key << ":" << val << std::endl;
+			auto delim = key_val.find(':');
+			auto key = key_val.substr(0, delim);
+			auto val = key_val.substr(delim + 1, key_val.size());
 			passport.fields[key] = val;
 		}
 	}
@@ -146,11 +144,6 @@ int main()
 		auto p = GetPassportFromStream(input);
 		valid_part1 += p.ValidPart1();
 		valid_part2 += p.ValidPart2();
-
-		//for (auto& field : p.fields)
-		//{
-		//	std::cout << field.first << ":" << field.second << std::endl;
-		//}
 	}
 	std::cout << "Valid part 1 " << valid_part1 << std::endl;
 	std::cout << "Valid part 2 " << valid_part2 << std::endl;
