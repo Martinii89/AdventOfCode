@@ -41,6 +41,7 @@ struct Passport
 		return true;
 	}
 
+
 	bool HairValidation()
 	{
 		auto field = fields["hcl"];
