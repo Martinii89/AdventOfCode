@@ -77,7 +77,53 @@ struct Program
             Execute(instructions[position]);
         }
     }
+
+    void Run2(int skip_potential_fixes)
+    {
+        int fixes_skipped = 0;
+        std::set<int> instruction_already_run;
+        auto can_fix = [&](Instruction& i) {
+            return i.op_code == OPCODE::JMP || i.op_code == OPCODE::NOP;
+        };
+        auto fix = [&](Instruction& i) {
+            if (i.op_code == OPCODE::JMP) {
+                i.op_code = OPCODE::NOP;
+            }
+            else {
+                i.op_code = OPCODE::JMP;
+            }
+        };
+        while (instruction_already_run.count(position) == 0 && position < instructions.size())
+        {
+            instruction_already_run.insert(position);
+            Instruction& instruction = instructions[position];
+            if (can_fix(instruction)) {
+                if (fixes_skipped == skip_potential_fixes) {
+                    fix(instruction);
+                    
+                }
+                fixes_skipped++;
+            }
+            Execute(instruction);
+        }
+    }
 };
+
+int DeCorruptProgram(Program& p)
+{
+    p.memory = 0;
+    p.position = 0;
+    for (size_t i = 0; i < p.instructions.size(); i++)
+    {
+        auto p_copy = p;
+        p_copy.Run2(i);
+        if (p_copy.position == p_copy.instructions.size())
+        {
+            std::cout << "When skipping " << i << " fixes. The program ends at position " << p_copy.position << " with the value of " << p_copy.memory << std::endl;
+        }
+    }
+    return 0;
+}
 
 
 int main()
@@ -91,5 +137,7 @@ int main()
     }
     program.Run();
     std::cout << "The program ends with a value of " << program.memory << std::endl;
+
+    DeCorruptProgram(program);
 }
 
