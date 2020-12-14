@@ -41,7 +41,7 @@ struct Preamble
         // the set is sorted
         auto front = number_set.begin();
         auto back = number_set.rbegin();
-        while (*front != *back) // set only contains unique values. if the values are equal, the iterators are pointing to the same spot.
+        while (*front != *back) // set only contains unique ones. if the ones are equal, the iterators are pointing to the same spot.
         {
             auto s = *front + *back;
             if (s == number)
